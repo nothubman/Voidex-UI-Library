@@ -7,7 +7,7 @@ local CoreGui          = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
 
--- ── Lucide Icons Integration ────────────────────────────────────────────────
+-- â”€â”€ Lucide Icons Integration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Loads the lucide-roblox sprite sheet pack so callers can pass short icon
 -- names (e.g. "settings", "star", "home") instead of raw rbxassetid numbers.
 local Lucide = nil
@@ -21,8 +21,8 @@ if _lucideOk and _lucideResult then
 end
 
 -- Helper: resolve an icon value to { Url, ImageRectSize, ImageRectOffset }.
--- • If `icon` is a string  → look it up in Lucide (returns sprite data or nil)
--- • If `icon` is a number  → treat as a plain rbxassetid (legacy behaviour)
+-- â€¢ If `icon` is a string  â†’ look it up in Lucide (returns sprite data or nil)
+-- â€¢ If `icon` is a number  â†’ treat as a plain rbxassetid (legacy behaviour)
 -- Returns a table { isLucide, url, rectSize, rectOffset } or nil.
 local function resolveIcon(icon)
     if icon == nil then return nil end
@@ -465,7 +465,7 @@ function Voidex.new(config)
     blur.Parent = game:GetService("Lighting")
     -- blur is toggled with GUI visibility (see toggle/close below)
 
-    -- ── Outer glow container: gives the "floating with gap" premium look ──────
+    -- â”€â”€ Outer glow container: gives the "floating with gap" premium look â”€â”€â”€â”€â”€â”€
     -- The container is slightly larger; win sits inset inside it with padding
     local winContainer = Instance.new("Frame", sg)
     winContainer.Name             = "WindowContainer"
@@ -484,7 +484,7 @@ function Voidex.new(config)
     outerGlow.BorderSizePixel = 0
     outerGlow.ZIndex = 1
     corner(outerGlow, 20)
-    -- No hard outer border — the outer glow frame itself defines the edge softly
+    -- No hard outer border â€” the outer glow frame itself defines the edge softly
 
     local win = Instance.new("Frame", winContainer)
     win.Name             = "Window"
@@ -508,7 +508,7 @@ function Voidex.new(config)
     local winStroke = Instance.new("UIStroke", win)
     winStroke.Color = Color3.fromRGB(180, 150, 255)
     winStroke.Thickness = 1
-    winStroke.Transparency = 0.68          -- very faint — just a frost shimmer
+    winStroke.Transparency = 0.68          -- very faint â€” just a frost shimmer
     winStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     local winStrokeGrad = Instance.new("UIGradient", winStroke)
     winStrokeGrad.Color = ColorSequence.new({
@@ -518,7 +518,7 @@ function Voidex.new(config)
         ColorSequenceKeypoint.new(1,    Color3.fromRGB(200, 180, 255)),  -- back to lavender
     })
 
-    -- ── Frost texture overlay: randomised grain dots filling the whole pane ──
+    -- â”€â”€ Frost texture overlay: randomised grain dots filling the whole pane â”€â”€
     local frostLayer = Instance.new("Frame", win)
     frostLayer.Name = "FrostLayer"
     frostLayer.Size = UDim2.new(1, 0, 1, 0)
@@ -544,7 +544,7 @@ function Voidex.new(config)
         corner(grain, 100)
     end
 
-    -- ── Particles: more, slightly larger, float across entire window ──────────
+    -- â”€â”€ Particles: more, slightly larger, float across entire window â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     local pBg = Instance.new("Frame", win)
     pBg.Size = UDim2.new(1, 0, 1, 0)
     pBg.BackgroundTransparency = 1
@@ -836,7 +836,7 @@ function Voidex.new(config)
         ColorSequenceKeypoint.new(1,   Color3.fromRGB(60,  28, 120)),
     }, 90)
 
-    -- Frosted vertical divider between sidebar and content — pill-shaped ends
+    -- Frosted vertical divider between sidebar and content â€” pill-shaped ends
     local sbLine = Instance.new("Frame", sidebar)
     sbLine.Size = UDim2.new(0, 2, 0.80, 0)
     sbLine.Position = UDim2.new(1, -1, 0.10, 0)
@@ -1063,7 +1063,7 @@ function Voidex:CreateTab(name, icon)
         row.ZIndex = 13
         row.LayoutOrder = tabObj._cnt
         corner(row, 8)
-        -- Barely-there frost rim — just a whisper of definition around each card
+        -- Barely-there frost rim â€” just a whisper of definition around each card
         local s = Instance.new("UIStroke", row)
         s.Color = Color3.fromRGB(170, 140, 255)
         s.Thickness = 1
@@ -1107,7 +1107,7 @@ function Voidex:CreateTab(name, icon)
     end
 
     local function leftAccentBar(row)
-        -- Frosted vertical frost line — separates left edge, no solid color
+        -- Frosted vertical frost line â€” separates left edge, no solid color
         local bar = Instance.new("Frame", row)
         bar.Size = UDim2.new(0, 2, 0.55, 0)
         bar.Position = UDim2.new(0, 2, 0.225, 0)
@@ -1543,21 +1543,39 @@ function Voidex:CreateTab(name, icon)
         arrow.TextColor3 = T.TextSub
         arrow.ZIndex = 22
 
-        local dropFrame = Instance.new("Frame", container)
-        dropFrame.Size = UDim2.new(0, 118, 0, 0)
-        dropFrame.Position = UDim2.new(1, -130, 1, 3)
-        dropFrame.BackgroundColor3 = Color3.fromRGB(80, 40, 160)
-        dropFrame.BackgroundTransparency = 0.72
-        dropFrame.BorderSizePixel = 0
-        dropFrame.ZIndex = 35
-        dropFrame.ClipsDescendants = true
-        dropFrame.Visible = false
-        corner(dropFrame, 7)
-        local dfStroke = Instance.new("UIStroke", dropFrame)
+        -- Outer clip frame keeps rounded corners while ScrollingFrame scrolls inside
+        local dropClip = Instance.new("Frame", container)
+        dropClip.Name = "DropClip"
+        dropClip.Size = UDim2.new(0, 118, 0, 0)
+        dropClip.Position = UDim2.new(1, -130, 1, 3)
+        dropClip.BackgroundColor3 = Color3.fromRGB(80, 40, 160)
+        dropClip.BackgroundTransparency = 0.72
+        dropClip.BorderSizePixel = 0
+        dropClip.ZIndex = 35
+        dropClip.ClipsDescendants = true
+        dropClip.Visible = false
+        corner(dropClip, 7)
+        local dfStroke = Instance.new("UIStroke", dropClip)
         dfStroke.Color = Color3.fromRGB(130, 80, 220)
         dfStroke.Thickness = 1
         dfStroke.Transparency = 0.35
         dfStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+        -- ScrollingFrame inside clip â€” supports mouse wheel AND touch drag on mobile
+        local dropFrame = Instance.new("ScrollingFrame", dropClip)
+        dropFrame.Name = "DropScroll"
+        dropFrame.Size = UDim2.new(1, 0, 1, 0)
+        dropFrame.BackgroundTransparency = 1
+        dropFrame.BorderSizePixel = 0
+        dropFrame.ZIndex = 36
+        dropFrame.ScrollBarThickness = 3
+        dropFrame.ScrollBarImageColor3 = Color3.fromRGB(140, 100, 220)
+        dropFrame.ScrollBarImageTransparency = 0.3
+        dropFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+        dropFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        dropFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+        dropFrame.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
+        dropFrame.ScrollingEnabled = true
 
         local dropLayout = Instance.new("UIListLayout", dropFrame)
         dropLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1606,8 +1624,8 @@ function Voidex:CreateTab(name, icon)
                         end
                     end
                     if opts.Callback then task.spawn(opts.Callback, opt) end
-                    tw(dropFrame, { Size = UDim2.new(0, 118, 0, 0) }, 0.2)
-                    task.delay(0.2, function() dropFrame.Visible = false end)
+                    tw(dropClip, { Size = UDim2.new(0, 118, 0, 0) }, 0.2)
+                    task.delay(0.2, function() dropClip.Visible = false end)
                     tw(arrow, { Rotation = 0 }, 0.2)
                     isOpen = false
                 end)
@@ -1622,13 +1640,14 @@ function Voidex:CreateTab(name, icon)
         over.MouseButton1Click:Connect(function()
             isOpen = not isOpen
             if isOpen then
-                dropFrame.Visible = true
-                dropFrame.Size = UDim2.new(0, 118, 0, 0)
-                tw(dropFrame, { Size = UDim2.new(0, 118, 0, math.min(totalH, 130)) }, 0.25, Enum.EasingStyle.Back)
+                dropClip.Visible = true
+                dropClip.Size = UDim2.new(0, 118, 0, 0)
+                dropFrame.CanvasPosition = Vector2.new(0, 0) -- reset scroll to top
+                tw(dropClip, { Size = UDim2.new(0, 118, 0, math.min(totalH, 130)) }, 0.25, Enum.EasingStyle.Back)
                 tw(arrow, { Rotation = 180 }, 0.2)
             else
-                tw(dropFrame, { Size = UDim2.new(0, 118, 0, 0) }, 0.2)
-                task.delay(0.2, function() dropFrame.Visible = false end)
+                tw(dropClip, { Size = UDim2.new(0, 118, 0, 0) }, 0.2)
+                task.delay(0.2, function() dropClip.Visible = false end)
                 tw(arrow, { Rotation = 0 }, 0.2)
             end
         end)
@@ -1860,26 +1879,31 @@ function Voidex:CreateTab(name, icon)
         paraStroke.Transparency = 0.40
         paraStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
+        -- UIPadding does NOT have PaddingAll; set each side individually
         local pad = Instance.new("UIPadding", container)
-        pad.PaddingAll = UDim.new(0, 10)
+        pad.PaddingTop    = UDim.new(0, 10)
+        pad.PaddingBottom = UDim.new(0, 10)
+        pad.PaddingLeft   = UDim.new(0, 10)
+        pad.PaddingRight  = UDim.new(0, 10)
+
         local layout = Instance.new("UIListLayout", container)
         layout.SortOrder = Enum.SortOrder.LayoutOrder
         layout.Padding   = UDim.new(0, 4)
 
+        local titleLbl = nil
         if opts.Title and opts.Title ~= "" then
-            local t = Instance.new("TextLabel", container)
-            t.Size = UDim2.new(1, 0, 0, 18)
-            t.AutomaticSize = Enum.AutomaticSize.Y
-            t.BackgroundTransparency = 1
-            t.Text = opts.Title
-            t.Font = Enum.Font.GothamBold
-            t.TextSize = 13
-            t.TextColor3 = T.AccentLt
-            t.TextXAlignment = Enum.TextXAlignment.Left
-            t.TextWrapped = true
-            t.ZIndex = 14
-            t.LayoutOrder = 1
-            accentFill(t, 0)
+            titleLbl = Instance.new("TextLabel", container)
+            titleLbl.Size = UDim2.new(1, 0, 0, 0)
+            titleLbl.AutomaticSize = Enum.AutomaticSize.Y
+            titleLbl.BackgroundTransparency = 1
+            titleLbl.Text = opts.Title
+            titleLbl.Font = Enum.Font.GothamBold
+            titleLbl.TextSize = 13
+            titleLbl.TextColor3 = T.AccentLt
+            titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+            titleLbl.TextWrapped = true
+            titleLbl.ZIndex = 14
+            titleLbl.LayoutOrder = 1
         end
 
         local body = Instance.new("TextLabel", container)
@@ -1894,6 +1918,19 @@ function Voidex:CreateTab(name, icon)
         body.TextWrapped = true
         body.ZIndex = 14
         body.LayoutOrder = 2
+
+        -- Return object so callers can update title/content dynamically
+        local obj = {}
+        function obj:Set(newOpts)
+            newOpts = newOpts or {}
+            if newOpts.Title ~= nil and titleLbl then
+                titleLbl.Text = newOpts.Title
+            end
+            if newOpts.Content ~= nil then
+                body.Text = newOpts.Content
+            end
+        end
+        return obj
     end
 
     return tabObj
@@ -2018,9 +2055,9 @@ function Voidex:Notify(opts)
     end)
 end
 
--- ── Public icon utilities ─────────────────────────────────────────────────────
--- Voidex.GetIcon("star")  → { Url, ImageRectSize, ImageRectOffset } or nil
--- Voidex.Icons            → list of all available lucide icon names
+-- â”€â”€ Public icon utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Voidex.GetIcon("star")  â†’ { Url, ImageRectSize, ImageRectOffset } or nil
+-- Voidex.Icons            â†’ list of all available lucide icon names
 Voidex.GetIcon = function(name)
     if Lucide then return Lucide.GetAsset(name) end
     return nil
