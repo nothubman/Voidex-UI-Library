@@ -7,9 +7,494 @@ local CoreGui          = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
 
--- â”€â”€ Lucide Icons Integration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
--- Loads the lucide-roblox sprite sheet pack so callers can pass short icon
--- names (e.g. "settings", "star", "home") instead of raw rbxassetid numbers.
+local KEY_MAP = {
+
+    naem="Name", nme="Name", nam="Name", nmae="Name", neam="Name",
+    nname="Name", lable="Name",
+
+    text="Name", title="Name",
+
+    lbl="Name",
+
+    calback="Callback", callbck="Callback", calbackk="Callback",
+    cb="Callback", fn="Callback", func="Callback", action="Callback",
+    onchange="Callback", onchanged="Callback", changed="Callback",
+    onclick="Callback", onpress="Callback", onactivate="Callback",
+
+    callbackfn="Callback",
+
+    onchanged_="Callback",
+
+    currentvaule="CurrentValue", currentvlaue="CurrentValue",
+    curentvalue="CurrentValue", currentval="CurrentValue",
+    currenvalue="CurrentValue",
+
+    default="CurrentValue", def="CurrentValue", defualt="CurrentValue",
+    defaultvalue="CurrentValue", initialvalue="CurrentValue",
+    startvalue="CurrentValue", startingvalue="CurrentValue",
+    value="CurrentValue",
+
+    flage="Flag", falg="Flag", fag="Flag", flagname="Flag",
+    variablename="Flag", varname="Flag", id="Flag",
+
+    incrment="Increment", incremet="Increment", incremnt="Increment",
+    incremeent="Increment", step="Increment", stp="Increment",
+
+    rounding="Increment",
+
+    stepsize="Increment",
+
+    min="_min", max="_max",
+    minvalue="_min", maxvalue="_max",
+    minimum="_min", maximum="_max",
+
+    optoins="Options", optins="Options", opions="Options", optinos="Options",
+
+    values="Options", vals="Options", choices="Options", items="Options",
+    list="Options",
+
+    currentoption="CurrentValue", currentopiton="CurrentValue",
+    selectedoption="CurrentValue", selected="CurrentValue",
+
+    placehldertext="PlaceholderText", placeholdrtext="PlaceholderText",
+    plcaeholdertext="PlaceholderText", placeholertxt="PlaceholderText",
+    placehodlertext="PlaceholderText",
+    placeholder="PlaceholderText", hinttext="PlaceholderText",
+    hint="PlaceholderText", placeholdertext="PlaceholderText",
+
+    watermark="PlaceholderText",
+
+    currentkeybnd="CurrentKeybind", currentkeybid="CurrentKeybind",
+    currnetkeybind="CurrentKeybind",
+    keybind="CurrentKeybind", bind="CurrentKeybind", key="CurrentKeybind",
+
+    defaultkeybind="CurrentKeybind", defaultkey="CurrentKeybind",
+    keycode="CurrentKeybind",
+
+    colour="Color", defaultcolor="Color", defaultcolour="Color",
+    startcolor="Color", initialcolor="Color",
+
+    tittle="Title", tilte="Title", ttile="Title", ttle="Title",
+
+    name_notify="Title",
+    conetnt="Content", contnet="Content", conent="Content", contnt="Content",
+    body="Content", message="Content", msg="Content", description="Content",
+
+    typ="Type", ntype="Type", notiftype="Type", notificationtype="Type",
+    duraiton="Duration", dur="Duration",
+
+    time="Duration", tme="Duration", seconds="Duration", length="Duration",
+
+    removetextafterfocuslost="RemoveTextAfterFocusLost",
+
+    textdisappear="RemoveTextAfterFocusLost",
+
+    cleartextonfocus="RemoveTextAfterFocusLost",
+    clearonsubmit="RemoveTextAfterFocusLost",
+
+    info=false, suffix=false, holdtointeract=false,
+    hidepremium=false, saveconfig=false, configfolder=false,
+    loadingtitle=false, loadingsubtitle=false,
+    image=false, icon=false,          
+    premiumonly=false, save=false, tooltip=false,
+    compact=false, finished=false, numeric=false,
+    section=false, theme=false, color_=false,
+    sideimage=false, loadingicon=false,
+
+    infotransparency=false, ricochetmode=false,
+
+    closecallback=false, hiddenui=false,
+
+    noexit=false, noflag=false,
+
+    titlecolor=false, sectioncolor=false,
+
+    window=false, animations=false,
+
+    accent=false, accentcolor=false,
+}
+
+local function fixValue(key, val)
+    if key == "CurrentValue" then
+
+        if val == "true"  or val == 1 then return true  end
+        if val == "false" or val == 0 then return false end
+
+    end
+    if key == "Increment" then
+        return tonumber(val) or 1
+    end
+    if key == "Duration" then
+        return tonumber(val) or 3.5
+    end
+    if key == "Type" then
+        local v = tostring(val):lower()
+        if v:find("suc")  then return "success" end
+        if v:find("warn") then return "warning"  end
+        if v:find("err")  then return "error"    end
+        return "info"
+    end
+    if key == "RemoveTextAfterFocusLost" then
+        if val == "true"  or val == 1 then return true  end
+        if val == "false" or val == 0 then return false end
+    end
+    if key == "CurrentKeybind" then
+
+        if typeof and typeof(val) == "EnumItem" then return val.Name end
+        if type(val) == "userdata" then
+            local ok, n = pcall(function() return val.Name end)
+            if ok and n then return n end
+        end
+        return tostring(val)
+    end
+    return val
+end
+
+local ICON_FIX = {
+
+    hoem="home", hme="home", homee="home", hom="home",
+    seting="settings", setings="settings", settigns="settings", settting="settings",
+    sheild="shield", shild="shield", shiled="shield",
+    seach="search", serach="search", saerch="search",
+    strar="star", stra="star",
+    usre="user", usr="user",
+    bel="bell", bll="bell",
+    herat="heart", haert="heart",
+    zp="zap", zpa="zap",
+    gobe="globe", glbe="globe",
+    sheild2="shield",
+
+    gear="settings", cog="settings",
+    person="user", player="user", profile="user",
+    flag_="star", favourite="star", favorite="star",
+    warn="alert-triangle", warning="alert-triangle", alert="alert-triangle",
+    tick="check", done="check",
+    close="x", cross="x",
+    magnify="search", find="search",
+    bullet="list", menu="list",
+    combat="sword", fight="sword", weapon="sword",
+    cpu_="cpu", computer="cpu", pc="cpu",
+    network="wifi", internet="wifi",
+    power="zap",
+}
+
+local function fixIcon(icon)
+    if type(icon) == "number" then return icon end
+    if type(icon) ~= "string" then return nil  end
+    local low = icon:lower():gsub("[_ -]","")
+    return ICON_FIX[low] or icon
+end
+
+local VOIDEX_KEYS = {
+    Name=true, Flag=true, Callback=true, CurrentValue=true, Increment=true,
+    Range=true, Options=true, PlaceholderText=true, CurrentKeybind=true,
+    RemoveTextAfterFocusLost=true, Title=true, Content=true, Type=true,
+    Duration=true, Color=true,
+}
+
+local function fixOpts(opts)
+    if type(opts) ~= "table" then return opts end
+    local out = {}
+
+    for rawK, v in pairs(opts) do
+        local k = tostring(rawK):lower():gsub("[%s_%-]","")
+        local mapped = KEY_MAP[k]
+
+        if mapped == false then
+
+        elseif mapped then
+            out[mapped] = fixValue(mapped, v)
+        else
+
+            local found
+            for ck in pairs(VOIDEX_KEYS) do
+                if ck:lower() == k then found = ck; break end
+            end
+            local finalKey = found or rawK
+            out[finalKey] = fixValue(tostring(finalKey), v)
+        end
+    end
+
+    if out._min ~= nil or out._max ~= nil then
+        out.Range = { tonumber(out._min) or 0, tonumber(out._max) or 100 }
+        out._min = nil; out._max = nil
+    end
+
+    if type(out.Options) == "table" and type(out.CurrentValue) == "number"
+    and out.CurrentValue == math.floor(out.CurrentValue) and out.Options[out.CurrentValue] then
+        out.CurrentValue = out.Options[out.CurrentValue]
+    end
+
+    if type(out.CurrentValue) == "table" and out.CurrentValue[1] then
+        out.CurrentValue = out.CurrentValue[1]
+    end
+
+    return out
+end
+
+local METHOD_MAP = {
+
+    createtogel="CreateToggle", createtogle="CreateToggle",
+    createtoggl="CreateToggle",
+    createbuttn="CreateButton", createbtn="CreateButton",
+    creatbutton="CreateButton", creatbtn="CreateButton",
+    creatslider="CreateSlider", creatsldr="CreateSlider",
+    creatdropdown="CreateDropdown", createdropdown="CreateDropdown",
+    createtextbx="CreateTextbox", createtextfeild="CreateTextbox",
+    createtextfield="CreateTextbox",
+    createkeybnd="CreateKeybind", createkeybid="CreateKeybind",
+    createkeybinding="CreateKeybind",
+    createcolorpick="CreateColorPicker",
+    createcolourpicker="CreateColorPicker",
+    createcolour="CreateColorPicker",
+    createparagrph="CreateParagraph", createpara="CreateParagraph",
+    createlbl="CreateLabel", createlable="CreateLabel",
+    createsec="CreateSection",
+
+    createsection="CreateSection",
+    createbutton="CreateButton",
+    createtoggle="CreateToggle",
+    createslider="CreateSlider",
+    createdropdown_="CreateDropdown",
+    createinput="CreateTextbox",       
+    createkeybind="CreateKeybind",
+    createcolorpicker="CreateColorPicker",
+
+    addsection="CreateSection",
+    addbutton="CreateButton",
+    addtoggle="CreateToggle",
+    addslider="CreateSlider",
+    adddropdown="CreateDropdown",
+    addtextbox="CreateTextbox",
+    addinput="CreateTextbox",
+    addbind="CreateKeybind",
+    addkeybind="CreateKeybind",
+    addlabel="CreateLabel",
+    addparagraph="CreateParagraph",
+    addcolorpicker="CreateColorPicker",
+    addcolourpicker="CreateColorPicker",
+    addcolorwheel="CreateColorPicker",
+
+    addtoggle="CreateToggle",
+    addslider="CreateSlider",
+    adddropdown_="CreateDropdown",
+    addinput_="CreateTextbox",
+    addkeybind_="CreateKeybind",
+    addcolorpicker_="CreateColorPicker",
+
+    newsection="CreateSection",
+    newbutton="CreateButton",
+    newtoggle="CreateToggle",
+    newslider="CreateSlider",
+    newdropdown="CreateDropdown",
+    newtextbox="CreateTextbox",
+    newinput="CreateTextbox",
+    newbind="CreateKeybind",
+    newkeybind="CreateKeybind",
+    newlabel="CreateLabel",
+    newcolorpicker="CreateColorPicker",
+    newcolourpicker="CreateColorPicker",
+
+    addvalue="CreateSlider",
+    addoption="CreateDropdown",
+    addcheckbox="CreateToggle",
+    checkbox="CreateToggle",
+    addswitch="CreateToggle",
+    addtext="CreateLabel",
+    addtextfield="CreateTextbox",
+    addinputfield="CreateTextbox",
+
+    addbuttonelement="CreateButton",
+    addtoggleelement="CreateToggle",
+    addsliderelement="CreateSlider",
+    adddropdownelement="CreateDropdown",
+    addtextboxelement="CreateTextbox",
+    addkeybindelement="CreateKeybind",
+    addcolorpickerelement="CreateColorPicker",
+
+    addrow="CreateSection",
+    addactionbutton="CreateButton",
+    addtoggleswitch="CreateToggle",
+    addrange="CreateSlider",
+    addselectlist="CreateDropdown",
+    addstringinput="CreateTextbox",
+    addbindkey="CreateKeybind",
+
+    additem="CreateButton",
+    addcheck="CreateToggle",
+    addscroll="CreateSlider",
+    addselect="CreateDropdown",
+    addinputbox="CreateTextbox",
+    addhotkey="CreateKeybind",
+    addcolorbox="CreateColorPicker",
+
+    addcontrol="CreateButton",
+    addfield="CreateTextbox",
+    addentry="CreateTextbox",
+    addelement="CreateButton",
+    addwidget="CreateButton",
+}
+
+local WIN_METHOD_MAP = {
+
+    notfy="Notify", notifiy="Notify", notifie="Notify", notiify="Notify",
+    notifcation="Notify", notifiction="Notify",
+    createtab_="CreateTab",
+
+    maketab="CreateTab",
+    makenotification="Notify",       
+    sendnotification="Notify",
+
+    newtab="CreateTab",
+    notify_="Notify",
+
+    addtab="CreateTab",
+
+    notification="Notify",
+
+    addtab_="CreateTab",
+    alert="Notify",
+    popup="Notify",
+
+    addpage="CreateTab",
+    toast="Notify",
+
+    addpanel="CreateTab",
+    addnotification="Notify",
+
+    createpage="CreateTab",
+    shownotification="Notify",
+    sendmessage="Notify",
+}
+
+local function fixNotifyOpts(opts)
+    if type(opts) ~= "table" then return {} end
+    local o = fixOpts(opts)
+
+    if opts.Name  and not o.Title   then o.Title   = opts.Name  end
+    if opts.Time  and not o.Duration then o.Duration = tonumber(opts.Time) end
+
+    if opts.Message and not o.Content then o.Content = opts.Message end
+
+    if opts.Text and not o.Content and not o.Name then o.Content = opts.Text end
+
+    if opts.Body and not o.Content then o.Content = opts.Body end
+
+    if opts.Text and not o.Title then o.Title = opts.Text end
+
+    o.Title    = o.Title    or "Voidex"
+    o.Content  = o.Content  or ""
+    o.Duration = o.Duration or 3.5
+    o.Type     = fixValue("Type", o.Type or "info")
+
+    return o
+end
+
+local function makeGroupboxProxy(tabObj, sectionName)
+    tabObj:CreateSection(sectionName or "")
+
+    local proxy = {}
+
+    local function linoriaForward(voidexMethod)
+        return function(self, flagOrOpts, extraOpts)
+            local opts = {}
+            if type(flagOrOpts) == "string" and type(extraOpts) == "table" then
+                opts = extraOpts
+                opts.Flag = flagOrOpts
+            elseif type(flagOrOpts) == "table" then
+                opts = flagOrOpts
+            end
+
+            if opts.Text  and not opts.Name     then opts.Name     = opts.Text  end
+            if opts.Func  and not opts.Callback  then opts.Callback = opts.Func  end
+            return tabObj[voidexMethod](tabObj, fixOpts(opts))
+        end
+    end
+
+    proxy.AddToggle      = linoriaForward("CreateToggle")
+    proxy.AddSlider      = linoriaForward("CreateSlider")
+    proxy.AddDropdown    = linoriaForward("CreateDropdown")
+    proxy.AddInput       = linoriaForward("CreateTextbox")
+    proxy.AddTextbox     = linoriaForward("CreateTextbox")
+    proxy.AddKeybind     = linoriaForward("CreateKeybind")
+    proxy.AddBind        = linoriaForward("CreateKeybind")
+    proxy.AddColorPicker = linoriaForward("CreateColorPicker")
+    proxy.AddColorWheel  = linoriaForward("CreateColorPicker")
+
+    proxy.AddButton = function(self, optsOrText, cb)
+        local opts = {}
+        if type(optsOrText) == "string" then
+            opts.Name = optsOrText; opts.Callback = cb
+        elseif type(optsOrText) == "table" then
+            opts = optsOrText
+            if opts.Text and not opts.Name     then opts.Name     = opts.Text end
+            if opts.Func and not opts.Callback  then opts.Callback = opts.Func end
+        end
+        return tabObj:CreateButton(fixOpts(opts))
+    end
+
+    proxy.AddLabel = function(self, text)
+        return tabObj:CreateLabel(type(text)=="string" and text or "")
+    end
+
+    proxy.AddSection = function(self, name)
+        return tabObj:CreateSection(type(name)=="string" and name or "")
+    end
+
+    proxy.AddParagraph = function(self, title, content)
+        return tabObj:CreateParagraph({ Title=title or "", Content=content or "" })
+    end
+
+    setmetatable(proxy, {
+        __index = function(_, k)
+            local norm = k:lower():gsub("[%s_%-]","")
+            local vm = METHOD_MAP[norm]
+            if vm then
+                return function(self, a, b)
+                    local opts = type(a)=="table" and a or (type(b)=="table" and b or {})
+                    if type(a)=="string" then opts.Flag = a end
+                    if opts.Text and not opts.Name then opts.Name = opts.Text end
+                    return tabObj[vm](tabObj, fixOpts(opts))
+                end
+            end
+        end
+    })
+
+    return proxy
+end
+
+local function wrapTab(tabObj)
+    local wrapped = setmetatable({}, {
+        __index = function(_, k)
+            if tabObj[k] then return tabObj[k] end
+            local norm = k:lower():gsub("[%s_%-]","")
+
+            local vm = METHOD_MAP[norm]
+            if vm and tabObj[vm] then
+                return function(self, opts, ...)
+                    if type(opts) == "table" then opts = fixOpts(opts) end
+                    return tabObj[vm](tabObj, opts, ...)
+                end
+            end
+
+            if norm=="addleftgroupbox" or norm=="addrightgroupbox"
+            or norm=="addleftgroup"    or norm=="addrightgroup"
+            or norm=="addgroup"        or norm=="addgroupbox" then
+                return function(self, name) return makeGroupboxProxy(tabObj, name) end
+            end
+
+            if norm=="newsection" or norm=="addsection" then
+                return function(self, name, info)
+                    tabObj:CreateSection(name or "")
+                    return wrapTab(tabObj)
+                end
+            end
+        end,
+        __newindex = function(_, k, v) tabObj[k] = v end,
+    })
+    return wrapped
+end
+
 local Lucide = nil
 local _lucideOk, _lucideResult = pcall(function()
     return loadstring(game:HttpGet(
@@ -20,10 +505,6 @@ if _lucideOk and _lucideResult then
     Lucide = _lucideResult
 end
 
--- Helper: resolve an icon value to { Url, ImageRectSize, ImageRectOffset }.
--- â€¢ If `icon` is a string  â†’ look it up in Lucide (returns sprite data or nil)
--- â€¢ If `icon` is a number  â†’ treat as a plain rbxassetid (legacy behaviour)
--- Returns a table { isLucide, url, rectSize, rectOffset } or nil.
 local function resolveIcon(icon)
     if icon == nil then return nil end
     if type(icon) == "string" then
@@ -38,7 +519,7 @@ local function resolveIcon(icon)
                 }
             end
         end
-        -- Fallback: string that is actually a numeric id
+
         local num = tonumber(icon)
         if num then
             return { isLucide = false, url = "rbxassetid://" .. tostring(num) }
@@ -51,7 +532,7 @@ local function resolveIcon(icon)
 end
 
 local T = {
-    -- Glass base: near-black with slight purple tint, used with transparency
+
     Bg            = Color3.fromRGB(12,   8,  28),
     Surface       = Color3.fromRGB(20,  14,  42),
     SurfaceHigh   = Color3.fromRGB(28,  20,  58),
@@ -69,7 +550,7 @@ local T = {
     White         = Color3.fromRGB(248,246, 255),
     TextSub       = Color3.fromRGB(190,168, 230),
     TextMuted     = Color3.fromRGB(110,  88, 160),
-    -- Glass borders: lighter, more visible for frosted-glass edge definition
+
     Border        = Color3.fromRGB( 90,  65, 160),
     BorderHot     = Color3.fromRGB(140, 100, 220),
     Success       = Color3.fromRGB( 34,197,  94),
@@ -457,25 +938,20 @@ function Voidex.new(config)
     if not sg.Parent then sg.Parent = PlayerGui end
     self._sg = sg
 
-    -- Subtle blur behind the glass UI
     local blur = Instance.new("BlurEffect")
     blur.Name = "VoidexBlur"
-    blur.Size = 12         -- soft frosted blur (0 = none, 56 = max)
+    blur.Size = 12
     blur.Enabled = true
     blur.Parent = game:GetService("Lighting")
-    -- blur is toggled with GUI visibility (see toggle/close below)
 
-    -- â”€â”€ Outer glow container: gives the "floating with gap" premium look â”€â”€â”€â”€â”€â”€
-    -- The container is slightly larger; win sits inset inside it with padding
     local winContainer = Instance.new("Frame", sg)
     winContainer.Name             = "WindowContainer"
-    winContainer.Size             = UDim2.new(0, 490, 0, 360)   -- 10px gap on each side
+    winContainer.Size             = UDim2.new(0, 490, 0, 360)
     winContainer.Position         = UDim2.new(0.5, -245, 0.5, -180)
     winContainer.BackgroundTransparency = 1
     winContainer.BorderSizePixel  = 0
     winContainer.ZIndex           = 1
 
-    -- Soft outer glow ring (purple haze behind the glass)
     local outerGlow = Instance.new("Frame", winContainer)
     outerGlow.Name = "OuterGlow"
     outerGlow.Size = UDim2.new(1, 0, 1, 0)
@@ -484,48 +960,43 @@ function Voidex.new(config)
     outerGlow.BorderSizePixel = 0
     outerGlow.ZIndex = 1
     corner(outerGlow, 20)
-    -- No hard outer border â€” the outer glow frame itself defines the edge softly
 
     local win = Instance.new("Frame", winContainer)
     win.Name             = "Window"
     win.Size             = UDim2.new(0, 470, 0, 340)
-    win.Position         = UDim2.new(0.5, -235, 0.5, -170)   -- centred inside container
+    win.Position         = UDim2.new(0.5, -235, 0.5, -170)
     win.BackgroundColor3 = Color3.fromRGB(80, 40, 160)
     win.BackgroundTransparency = 0.72
     win.BorderSizePixel  = 0
     win.ClipsDescendants = true
-    corner(win, 18)    -- slightly more rounded for premium feel
+    corner(win, 18)
     self._win = win
 
-    -- Glass fill: subtle purple gradient shimmer
     gradFill(win, {
         ColorSequenceKeypoint.new(0,   Color3.fromRGB(105, 58, 210)),
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80,  40, 160)),
         ColorSequenceKeypoint.new(1,   Color3.fromRGB(58,  26, 118)),
     }, 145)
 
-    -- Frost rim: barely-there edge, just enough to define the glass without looking like a border
     local winStroke = Instance.new("UIStroke", win)
     winStroke.Color = Color3.fromRGB(180, 150, 255)
     winStroke.Thickness = 1
-    winStroke.Transparency = 0.68          -- very faint â€” just a frost shimmer
+    winStroke.Transparency = 0.68
     winStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     local winStrokeGrad = Instance.new("UIGradient", winStroke)
     winStrokeGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0,    Color3.fromRGB(200, 180, 255)),  -- top: bright lavender
-        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(140, 100, 240)),  -- left: mid violet
-        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(100, 140, 255)),  -- bottom: icy blue
-        ColorSequenceKeypoint.new(1,    Color3.fromRGB(200, 180, 255)),  -- back to lavender
+        ColorSequenceKeypoint.new(0,    Color3.fromRGB(200, 180, 255)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(140, 100, 240)),
+        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(100, 140, 255)),
+        ColorSequenceKeypoint.new(1,    Color3.fromRGB(200, 180, 255)),
     })
 
-    -- â”€â”€ Frost texture overlay: randomised grain dots filling the whole pane â”€â”€
     local frostLayer = Instance.new("Frame", win)
     frostLayer.Name = "FrostLayer"
     frostLayer.Size = UDim2.new(1, 0, 1, 0)
     frostLayer.BackgroundTransparency = 1
     frostLayer.ZIndex = 2
     frostLayer.ClipsDescendants = true
-    -- Grain dots (static frost texture)
     local frostColors = {
         Color3.fromRGB(200, 170, 255),
         Color3.fromRGB(160, 120, 240),
@@ -544,7 +1015,6 @@ function Voidex.new(config)
         corner(grain, 100)
     end
 
-    -- â”€â”€ Particles: more, slightly larger, float across entire window â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     local pBg = Instance.new("Frame", win)
     pBg.Size = UDim2.new(1, 0, 1, 0)
     pBg.BackgroundTransparency = 1
@@ -555,7 +1025,7 @@ function Voidex.new(config)
     local particles = {}
     for i = 1, 55 do
         local dot = Instance.new("Frame", pBg)
-        local sz = math.random(1, 4)   -- larger range: 1-4px
+        local sz = math.random(1, 4)
         dot.Size = UDim2.new(0, sz, 0, sz)
         dot.Position = UDim2.new(math.random(2, 98)/100, 0, math.random(2, 98)/100, 0)
         dot.BackgroundColor3 = pColors[math.random(1, #pColors)]
@@ -571,11 +1041,9 @@ function Voidex.new(config)
         })
     end
 
-
-
     local titleBar = Instance.new("Frame", win)
     titleBar.Name = "TitleBar"
-    titleBar.Size = UDim2.new(1, 0, 0, 48)   -- exactly matches content offset so no overlap
+    titleBar.Size = UDim2.new(1, 0, 0, 48)
     titleBar.Position = UDim2.new(0, 0, 0, 0)
     titleBar.BackgroundColor3 = Color3.fromRGB(80, 40, 160)
     titleBar.BackgroundTransparency = 0.72
@@ -589,8 +1057,6 @@ function Voidex.new(config)
         ColorSequenceKeypoint.new(1,   Color3.fromRGB(60,  28, 120)),
     }, 90)
 
-
-    -- Frosted separator: sits right at the titleBar/content boundary, fully rounded pill ends
     local sep = Instance.new("Frame", win)
     sep.Size = UDim2.new(1, -40, 0, 3)
     sep.Position = UDim2.new(0, 20, 0, 47)
@@ -598,7 +1064,7 @@ function Voidex.new(config)
     sep.BackgroundTransparency = 0.55
     sep.BorderSizePixel = 0
     sep.ZIndex = 16
-    corner(sep, 100)                       -- fully pill-shaped/rounded ends
+    corner(sep, 100)
     gradFill(sep, {
         ColorSequenceKeypoint.new(0,    Color3.fromRGB(0,   0,   0)),
         ColorSequenceKeypoint.new(0.08, Color3.fromRGB(140, 110, 240)),
@@ -627,17 +1093,16 @@ function Voidex.new(config)
     titleTxt.Text = self.Name
     titleTxt.Font = Enum.Font.GothamBlack
     titleTxt.TextSize = 15
-    titleTxt.TextColor3 = Color3.fromRGB(220, 200, 255)  -- soft lavender-white, readable on glass
+    titleTxt.TextColor3 = Color3.fromRGB(220, 200, 255)
     titleTxt.TextStrokeColor3 = Color3.fromRGB(60, 20, 120)
-    titleTxt.TextStrokeTransparency = 0.4                -- subtle dark purple stroke for contrast
+    titleTxt.TextStrokeTransparency = 0.4
     titleTxt.TextXAlignment = Enum.TextXAlignment.Left
     titleTxt.ZIndex = 17
-    -- Darker purple gradient so title pops on glass background
     local titleGrad = Instance.new("UIGradient", titleTxt)
     titleGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0,   Color3.fromRGB(210, 185, 255)),  -- light violet
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 145, 255)),  -- mid purple
-        ColorSequenceKeypoint.new(1,   Color3.fromRGB(140, 100, 230)),  -- darker purple
+        ColorSequenceKeypoint.new(0,   Color3.fromRGB(210, 185, 255)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 145, 255)),
+        ColorSequenceKeypoint.new(1,   Color3.fromRGB(140, 100, 230)),
     })
 
     local badge = Instance.new("Frame", titleBar)
@@ -684,16 +1149,13 @@ function Voidex.new(config)
         tw(outerGlow, { BackgroundTransparency = 1 }, 0.3)
         task.delay(0.32, function()
             winContainer.Visible = false
-            blur.Enabled = false          -- stop blurring when GUI hidden
+            blur.Enabled = false
             win.Size = UDim2.new(0, 470, 0, 340)
             win.BackgroundTransparency = 0.72
             outerGlow.BackgroundTransparency = 0.82
         end)
     end)
 
-    -- Full-window drag: drag from any blank area of the window.
-    -- Child buttons/sliders consume their own InputBegan so they won't bleed here.
-    -- We move winContainer so win stays centred inside it.
     do
         local dragging  = false
         local dragInput = nil
@@ -730,7 +1192,6 @@ function Voidex.new(config)
         end)
     end
 
-    -- Also keep titleBar dragging (titleBar is always a clean drag target)
     makeDraggable(winContainer, titleBar)
 
     local toggleSg = Instance.new("ScreenGui")
@@ -794,7 +1255,7 @@ function Voidex.new(config)
         if guiVisible then
             winContainer.Visible = true
             win.Visible = true
-            blur.Enabled = true           -- restore blur when GUI shown
+            blur.Enabled = true
             tw(win, { Size = UDim2.new(0, 470, 0, 340), BackgroundTransparency = 0.72 },
                 0.35, Enum.EasingStyle.Back)
             tw(outerGlow, { BackgroundTransparency = 0.82 }, 0.35)
@@ -804,7 +1265,7 @@ function Voidex.new(config)
             tw(outerGlow, { BackgroundTransparency = 1 }, 0.3)
             task.delay(0.32, function()
                 winContainer.Visible = false
-                blur.Enabled = false      -- stop blurring when GUI hidden
+                blur.Enabled = false
                 win.Size = UDim2.new(0, 470, 0, 340)
                 win.BackgroundTransparency = 0.72
                 outerGlow.BackgroundTransparency = 0.82
@@ -836,7 +1297,6 @@ function Voidex.new(config)
         ColorSequenceKeypoint.new(1,   Color3.fromRGB(60,  28, 120)),
     }, 90)
 
-    -- Frosted vertical divider between sidebar and content â€” pill-shaped ends
     local sbLine = Instance.new("Frame", sidebar)
     sbLine.Size = UDim2.new(0, 2, 0.80, 0)
     sbLine.Position = UDim2.new(1, -1, 0.10, 0)
@@ -844,7 +1304,7 @@ function Voidex.new(config)
     sbLine.BackgroundTransparency = 0.55
     sbLine.BorderSizePixel = 0
     sbLine.ZIndex = 12
-    corner(sbLine, 100)                    -- fully pill-shaped
+    corner(sbLine, 100)
     gradFill(sbLine, {
         ColorSequenceKeypoint.new(0,    Color3.fromRGB(0,   0,   0)),
         ColorSequenceKeypoint.new(0.12, Color3.fromRGB(130, 100, 240)),
@@ -1063,11 +1523,10 @@ function Voidex:CreateTab(name, icon)
         row.ZIndex = 13
         row.LayoutOrder = tabObj._cnt
         corner(row, 8)
-        -- Barely-there frost rim â€” just a whisper of definition around each card
         local s = Instance.new("UIStroke", row)
         s.Color = Color3.fromRGB(170, 140, 255)
         s.Thickness = 1
-        s.Transparency = 0.72          -- very faint, almost invisible
+        s.Transparency = 0.72
         s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         return row
     end
@@ -1107,7 +1566,6 @@ function Voidex:CreateTab(name, icon)
     end
 
     local function leftAccentBar(row)
-        -- Frosted vertical frost line â€” separates left edge, no solid color
         local bar = Instance.new("Frame", row)
         bar.Size = UDim2.new(0, 2, 0.55, 0)
         bar.Position = UDim2.new(0, 2, 0.225, 0)
@@ -1116,7 +1574,6 @@ function Voidex:CreateTab(name, icon)
         bar.BorderSizePixel = 0
         bar.ZIndex = 14
         corner(bar, 1)
-        -- Fade top and bottom like frost drip
         gradFill(bar, {
             ColorSequenceKeypoint.new(0,   Color3.fromRGB(0,   0,   0)),
             ColorSequenceKeypoint.new(0.2, Color3.fromRGB(160, 130, 255)),
@@ -1543,7 +2000,6 @@ function Voidex:CreateTab(name, icon)
         arrow.TextColor3 = T.TextSub
         arrow.ZIndex = 22
 
-        -- Outer clip frame keeps rounded corners while ScrollingFrame scrolls inside
         local dropClip = Instance.new("Frame", container)
         dropClip.Name = "DropClip"
         dropClip.Size = UDim2.new(0, 118, 0, 0)
@@ -1561,7 +2017,6 @@ function Voidex:CreateTab(name, icon)
         dfStroke.Transparency = 0.35
         dfStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-        -- ScrollingFrame inside clip â€” supports mouse wheel AND touch drag on mobile
         local dropFrame = Instance.new("ScrollingFrame", dropClip)
         dropFrame.Name = "DropScroll"
         dropFrame.Size = UDim2.new(1, 0, 1, 0)
@@ -1642,7 +2097,7 @@ function Voidex:CreateTab(name, icon)
             if isOpen then
                 dropClip.Visible = true
                 dropClip.Size = UDim2.new(0, 118, 0, 0)
-                dropFrame.CanvasPosition = Vector2.new(0, 0) -- reset scroll to top
+                dropFrame.CanvasPosition = Vector2.new(0, 0)
                 tw(dropClip, { Size = UDim2.new(0, 118, 0, math.min(totalH, 130)) }, 0.25, Enum.EasingStyle.Back)
                 tw(arrow, { Rotation = 180 }, 0.2)
             else
@@ -1879,7 +2334,6 @@ function Voidex:CreateTab(name, icon)
         paraStroke.Transparency = 0.40
         paraStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-        -- UIPadding does NOT have PaddingAll; set each side individually
         local pad = Instance.new("UIPadding", container)
         pad.PaddingTop    = UDim.new(0, 10)
         pad.PaddingBottom = UDim.new(0, 10)
@@ -1919,7 +2373,6 @@ function Voidex:CreateTab(name, icon)
         body.ZIndex = 14
         body.LayoutOrder = 2
 
-        -- Return object so callers can update title/content dynamically
         local obj = {}
         function obj:Set(newOpts)
             newOpts = newOpts or {}
@@ -1933,7 +2386,123 @@ function Voidex:CreateTab(name, icon)
         return obj
     end
 
-    return tabObj
+    local _raw = {}
+    for _, m in ipairs({
+        "CreateButton","CreateToggle","CreateSlider","CreateDropdown",
+        "CreateColorPicker","CreateTextbox","CreateKeybind","CreateParagraph"
+    }) do
+        _raw[m] = tabObj[m]
+        tabObj[m] = function(self, opts, ...)
+            if type(opts) == "table" then opts = fixOpts(opts) end
+            return _raw[m](tabObj, opts, ...)
+        end
+    end
+
+    tabObj.CreateTextBox      = tabObj.CreateTextbox
+    tabObj.CreateInput        = tabObj.CreateTextbox
+    tabObj.CreateTextField    = tabObj.CreateTextbox
+    tabObj.CreateBind         = tabObj.CreateKeybind
+    tabObj.CreateColorPickr   = tabObj.CreateColorPicker
+    tabObj.CreateColourPicker = tabObj.CreateColorPicker
+    tabObj.CreateCheck        = tabObj.CreateToggle
+    tabObj.CreateCheckbox     = tabObj.CreateToggle
+    tabObj.CreateBtn          = tabObj.CreateButton
+    tabObj.CreateLbl          = tabObj.CreateLabel
+    tabObj.CreateSec          = tabObj.CreateSection
+    tabObj.CreatePara         = tabObj.CreateParagraph
+
+    tabObj.CreateInput        = tabObj.CreateTextbox
+
+    tabObj.AddSection      = function(self, opts)
+        local name = type(opts)=="table" and (opts.Name or opts.name or opts.Text or "") or tostring(opts or "")
+        return tabObj:CreateSection(name)
+    end
+    tabObj.AddButton       = function(self, opts) return tabObj:CreateButton(opts)       end
+    tabObj.AddToggle       = function(self, opts) return tabObj:CreateToggle(opts)       end
+    tabObj.AddSlider       = function(self, opts) return tabObj:CreateSlider(opts)       end
+    tabObj.AddDropdown     = function(self, opts) return tabObj:CreateDropdown(opts)     end
+    tabObj.AddTextbox      = function(self, opts) return tabObj:CreateTextbox(opts)      end
+    tabObj.AddInput        = function(self, opts) return tabObj:CreateTextbox(opts)      end
+    tabObj.AddBind         = function(self, opts) return tabObj:CreateKeybind(opts)      end
+    tabObj.AddKeybind      = function(self, opts) return tabObj:CreateKeybind(opts)      end
+    tabObj.AddColorPicker  = function(self, opts) return tabObj:CreateColorPicker(opts)  end
+    tabObj.AddColorWheel   = tabObj.AddColorPicker
+    tabObj.AddColourPicker = tabObj.AddColorPicker
+    tabObj.AddLabel        = function(self, txt)  return tabObj:CreateLabel(txt)         end
+    tabObj.AddParagraph    = function(self, opts) return tabObj:CreateParagraph(opts)    end
+
+    tabObj.NewSection  = function(self, name, info)
+        tabObj:CreateSection(name or "")
+        return tabObj
+    end
+    tabObj.NewButton   = function(self, name, info, cb)
+        return tabObj:CreateButton({ Name=name, Callback=cb })
+    end
+    tabObj.NewToggle   = function(self, name, info, default, cb)
+        if type(default) == "function" then cb = default; default = false end
+        return tabObj:CreateToggle({ Name=name, CurrentValue=default or false, Callback=cb })
+    end
+    tabObj.NewSlider   = function(self, name, info, max, default, cb)
+        return tabObj:CreateSlider({ Name=name, Range={0, max or 100}, CurrentValue=default or 0, Callback=cb })
+    end
+    tabObj.NewDropdown = function(self, name, info, options, cb)
+        return tabObj:CreateDropdown({ Name=name, Options=options or {}, Callback=cb })
+    end
+    tabObj.NewTextBox  = function(self, name, info, cb)
+        return tabObj:CreateTextbox({ Name=name, Callback=cb })
+    end
+    tabObj.NewInput    = tabObj.NewTextBox
+    tabObj.NewBind     = function(self, name, info, default, cb)
+        if type(default) == "function" then cb = default; default = "None" end
+        return tabObj:CreateKeybind({ Name=name, CurrentKeybind=tostring(default or "None"), Callback=cb })
+    end
+    tabObj.NewKeybind  = tabObj.NewBind
+    tabObj.NewLabel    = function(self, text) return tabObj:CreateLabel(text) end
+    tabObj.NewColorPicker = function(self, name, info, default, cb)
+        if type(default) == "function" then cb = default; default = Color3.new(1,1,1) end
+        return tabObj:CreateColorPicker({ Name=name, Color=default, Callback=cb })
+    end
+
+    tabObj.AddLeftGroupbox   = function(self, name) return makeGroupboxProxy(tabObj, name) end
+    tabObj.AddRightGroupbox  = function(self, name) return makeGroupboxProxy(tabObj, name) end
+    tabObj.AddLeftGroup      = tabObj.AddLeftGroupbox
+    tabObj.AddRightGroup     = tabObj.AddRightGroupbox
+    tabObj.AddGroupbox       = tabObj.AddLeftGroupbox
+    tabObj.AddGroup          = tabObj.AddLeftGroupbox
+
+    tabObj.AddValue        = function(self, opts) return tabObj:CreateSlider(opts)    end
+    tabObj.AddOption       = function(self, opts) return tabObj:CreateDropdown(opts)  end
+    tabObj.AddCheckbox     = function(self, opts) return tabObj:CreateToggle(opts)    end
+    tabObj.AddSwitch       = tabObj.AddCheckbox
+    tabObj.AddText         = function(self, txt)  return tabObj:CreateLabel(txt)      end
+    tabObj.AddTextField    = function(self, opts) return tabObj:CreateTextbox(opts)   end
+    tabObj.AddInputField   = tabObj.AddTextField
+
+    tabObj.AddButtonElement       = function(self, opts) return tabObj:CreateButton(opts)      end
+    tabObj.AddToggleElement       = function(self, opts) return tabObj:CreateToggle(opts)      end
+    tabObj.AddSliderElement       = function(self, opts) return tabObj:CreateSlider(opts)      end
+    tabObj.AddDropdownElement     = function(self, opts) return tabObj:CreateDropdown(opts)    end
+    tabObj.AddTextboxElement      = function(self, opts) return tabObj:CreateTextbox(opts)     end
+    tabObj.AddKeybindElement      = function(self, opts) return tabObj:CreateKeybind(opts)     end
+    tabObj.AddColorPickerElement  = function(self, opts) return tabObj:CreateColorPicker(opts) end
+
+    tabObj.AddRow            = function(self, name) return tabObj:CreateSection(name or "") end
+    tabObj.AddActionButton   = function(self, opts) return tabObj:CreateButton(opts)      end
+    tabObj.AddToggleSwitch   = function(self, opts) return tabObj:CreateToggle(opts)      end
+    tabObj.AddRange          = function(self, opts) return tabObj:CreateSlider(opts)      end
+    tabObj.AddSelectList     = function(self, opts) return tabObj:CreateDropdown(opts)    end
+    tabObj.AddStringInput    = function(self, opts) return tabObj:CreateTextbox(opts)     end
+    tabObj.AddBindKey        = function(self, opts) return tabObj:CreateKeybind(opts)     end
+
+    tabObj.AddItem     = function(self, opts) return tabObj:CreateButton(opts)      end
+    tabObj.AddCheck    = function(self, opts) return tabObj:CreateToggle(opts)      end
+    tabObj.AddScroll   = function(self, opts) return tabObj:CreateSlider(opts)      end
+    tabObj.AddSelect   = function(self, opts) return tabObj:CreateDropdown(opts)    end
+    tabObj.AddInputBox = function(self, opts) return tabObj:CreateTextbox(opts)     end
+    tabObj.AddHotkey   = function(self, opts) return tabObj:CreateKeybind(opts)     end
+    tabObj.AddColorBox = function(self, opts) return tabObj:CreateColorPicker(opts) end
+
+    return wrapTab(tabObj)
 end
 
 local _notifyY = 20
@@ -1972,7 +2541,7 @@ function Voidex:Notify(opts)
     local notif = Instance.new("Frame", nsg)
     notif.Name = "Notif"
     notif.Size = UDim2.new(0, 290, 0, 72)
-    notif.Position = UDim2.new(1, 10, 0, yOff)
+    notif.Position = UDim2.new(0, -300, 0, yOff)
     notif.BackgroundColor3 = Color3.fromRGB(80, 40, 160)
     notif.BackgroundTransparency = 0.72
     notif.BorderSizePixel = 0
@@ -1991,7 +2560,6 @@ function Voidex:Notify(opts)
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB( 80, 40, 160)),
         ColorSequenceKeypoint.new(1,   Color3.fromRGB( 60, 28, 120)),
     }, 135)
-
 
     local aBar = Instance.new("Frame", notif)
     aBar.Size = UDim2.new(0, 3, 0.65, 0)
@@ -2041,13 +2609,13 @@ function Voidex:Notify(opts)
         nStrokeGrad.Rotation = (t * 60) % 360
     end)
 
-    tw(notif, { Position = UDim2.new(1, -308, 0, yOff) }, 0.38, Enum.EasingStyle.Back)
+    tw(notif, { Position = UDim2.new(0, 10, 0, yOff) }, 0.38, Enum.EasingStyle.Back)
 
     tw(prog, { Size = UDim2.new(0, 0, 0, 2) }, duration, Enum.EasingStyle.Linear)
 
     task.delay(duration, function()
         hbConn:Disconnect()
-        tw(notif, { Position = UDim2.new(1, 10, 0, yOff), BackgroundTransparency = 1 }, 0.28)
+        tw(notif, { Position = UDim2.new(0, -300, 0, yOff), BackgroundTransparency = 1 }, 0.28)
         task.delay(0.28, function()
             _notifySlots[slot] = nil
             nsg:Destroy()
@@ -2055,15 +2623,103 @@ function Voidex:Notify(opts)
     end)
 end
 
--- â”€â”€ Public icon utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
--- Voidex.GetIcon("star")  â†’ { Url, ImageRectSize, ImageRectOffset } or nil
--- Voidex.Icons            â†’ list of all available lucide icon names
 Voidex.GetIcon = function(name)
     if Lucide then return Lucide.GetAsset(name) end
     return nil
 end
 Voidex.Icons = Lucide and Lucide.Icons or {}
 
+local _rawNotify = Voidex.Notify
+Voidex.Notify = function(self, opts)
+    return _rawNotify(self, fixNotifyOpts(opts))
+end
+
+local _rawCreateTab = Voidex.CreateTab
+Voidex.CreateTab = function(self, name, icon)
+    return _rawCreateTab(self, name, fixIcon(icon))
+end
+
+local _rawNew = Voidex.new
+Voidex.new = function(config)
+    config = fixOpts(config or {})
+    if config.Title and not config.Name then config.Name = config.Title end
+    return _rawNew(config)
+end
+
+Voidex.MakeNotification = function(self, opts)
+    local o = type(opts) == "table" and opts or {}
+    if o.Name    and not o.Title    then o.Title    = o.Name             end
+    if o.Time    and not o.Duration then o.Duration = tonumber(o.Time)   end
+    if o.Message and not o.Content  then o.Content  = o.Message          end
+    return self:Notify(fixNotifyOpts(o))
+end
+
+Voidex.SendNotification = function(self, opts)
+    return self:Notify(fixNotifyOpts(opts))
+end
+Voidex.Notification = Voidex.SendNotification
+
+Voidex.ShowNotification = Voidex.MakeNotification
+
+Voidex.Alert  = function(self, opts) return self:Notify(fixNotifyOpts(opts)) end
+Voidex.Popup  = Voidex.Alert
+
+Voidex.Toast  = function(self, opts) return self:Notify(fixNotifyOpts(opts)) end
+
+Voidex.AddNotification = function(self, opts) return self:Notify(fixNotifyOpts(opts)) end
+
+Voidex.SendMessage = function(self, opts) return self:Notify(fixNotifyOpts(opts)) end
+
+Voidex.MakeTab = function(self, opts)
+    local name = type(opts) == "table" and (opts.Name or opts.Title or "Tab") or tostring(opts or "Tab")
+    local icon = type(opts) == "table" and (opts.Icon or opts.Image) or nil
+    return self:CreateTab(name, icon)
+end
+
+Voidex.NewTab = function(self, name, icon)
+    return self:CreateTab(tostring(name or "Tab"), icon)
+end
+
+Voidex.AddTab = function(self, name, icon)
+    return self:CreateTab(tostring(name or "Tab"), icon)
+end
+
+local _voidexAddTab = Voidex.AddTab
+Voidex.AddTab = function(self, nameOrOpts, icon)
+    if type(nameOrOpts) == "table" then
+        local name = nameOrOpts.Title or nameOrOpts.Name or "Tab"
+        local ic   = nameOrOpts.Icon or nameOrOpts.Image
+        return self:CreateTab(name, ic)
+    end
+    return self:CreateTab(tostring(nameOrOpts or "Tab"), icon)
+end
+
+Voidex.AddPage = function(self, name, icon)
+    return self:CreateTab(tostring(name or "Tab"), icon)
+end
+
+Voidex.AddPanel = function(self, name)
+    return self:CreateTab(tostring(name or "Tab"))
+end
+
+Voidex.CreatePage = function(self, name)
+    return self:CreateTab(tostring(name or "Tab"))
+end
+
 Voidex.CreateWindow = Voidex.new
+Voidex.MakeWindow   = Voidex.new
+Voidex.CreateLib    = function(self, name, theme)
+    return Voidex.new({ Name = tostring(name or "Voidex") })
+end
+Voidex.Init      = Voidex.new
+Voidex.CreateGui = Voidex.new
+Voidex.CreateUI  = Voidex.new
+
+for norm, mapped in pairs(WIN_METHOD_MAP) do
+    if not rawget(Voidex, mapped) then
+    elseif not rawget(Voidex, norm) then
+        Voidex[norm] = Voidex[mapped]
+    end
+end
 
 return Voidex
